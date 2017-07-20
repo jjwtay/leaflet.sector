@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Leaflet Draw</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+
+        crossorigin=""/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" crossorigin=""/>
+
+    <!--
+	<link rel="stylesheet" href="../Leaflet.draw/dist/leaflet.draw.css" />
+	<link rel="stylesheet" href="../dist/leaflet.draw-ellipse.css" />-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.css">
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" crossorigin=""></script>
+	<script src="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.js"></script>
+    <script src="./example/leaflet.draw-src.js"></script>
+    <script src="./example/leaflet.box.js"></script>
+    <script src="./example/leaflet.arc.js"></script>
+    <script src="./example/leaflet.sector.js"></script>
+	<script src="./Leaflet.draw-box.js"></script>
+    <script src="./example/Leaflet.draw-arc.js"></script>
+    <script src="./example/Leaflet.draw-sector.js"></script>
+    
+</head>
+
+<body>
+	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+
+	<script>
+		var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			osm = L.tileLayer(osmUrl, {
+				maxZoom: 18,
+				attribution: osmAttrib
+			}),
+			map = new L.Map('map', {
+				layers: [osm],
+				center: new L.LatLng(-37.7772, 175.2756),
+				zoom: 15,
+
+			})
+        
+        L.easyButton( '<span>box</span>', function(){
+            let options = {
+                shapeOptions: {
+                    color: 'rgb(255,255,0)',
+                    width: 2,
+                    fill: false
+                }
+            }
+            new L.Draw.Box(map, options).enable()
+        }).addTo(map)
+    
+        L.easyButton( '<span>arc</span>', function(){
+            let options = {
+                shapeOptions: {
+                    width: 2,
+                    fill: false,
+                    color: 'purple'
+                }
+            }
+            new L.Draw.Arc(map, options).enable()
+        }).addTo(map)
+    
+        L.easyButton( '<span>sector</span>', function(){
+            let options = {
+                shapeOptions: {
+                    color: 'hotpink',
+                    opacity: 1.0,
+                    width: 2,
+                    fill: true,
+                    fillColor: 'pink',
+                    fillOpacity: .7
+                }
+            }
+            new L.Draw.Sector(map, options).enable()
+        }).addTo(map)
+
+        map.on('draw:created', e => {
+            
+            switch (e.layerType) {
+            case 'box':
+                addBox(e)
+                break
+            case 'arc':
+                addArc(e)
+                break
+            case 'sector':
+                addSector(e)
+                break
+            default:
+                console.log('not valid layerType')
+            }
+
+        })
+
+        function addBox(e) {
+
+            let newBox = L.box({
+                center: e.layer.getCenter(),
+                width: e.layer.getWidth(),
+                length: e.layer.getLength(),
+                bearing: e.layer.getBearing(),
+                //Style options anything valid for L.polygon
+                color: 'rgb(255,255,0)'
+            }).on('dblclick', e => toggle(e, newBox))
+            
+            newBox.editing.enable()
+
+            map.addLayer(newBox)
+        }
+
+        function addSector(e) {
+            let newSector = L.sector({
+                center: e.layer.getCenter(),
+                innerRadius: e.layer.getInnerRadius(),
+                outerRadius: e.layer.getOuterRadius(),
+                startBearing: e.layer.getStartBearing(),
+                endBearing: e.layer.getEndBearing(),
+                fill: true,
+                fillColor: e.layer.options.fillColor,
+                fillOpacity: e.layer.options.fillOpacity,
+                color: e.layer.options.color,
+                opacity: e.layer.options.opacity
+            }).on('dblclick', e => toggle(e, newSector))
+
+            newSector.editing.enable()
+
+            map.addLayer(newSector)
+        }
+
+        function addArc(e) {
+            let newArc = L.arc({
+                center: e.layer.getCenter(),
+                radius: e.layer.getRadius(),
+                startBearing: e.layer.getStartBearing(),
+                endBearing: e.layer.getEndBearing(),
+                color: e.layer.options.color
+            }).on('dblclick', e => toggle(e, newArc))
+
+            newArc.editing.enable()
+
+            map.addLayer(newArc)
+        }
+
+        function toggle(e, shape) {
+            L.DomEvent.stop(e)
+
+            if (shape.editing.enabled()) {
+                shape.editing.disable()
+            } else {
+                shape.editing.enable()
+            }
+        }
+
+        let box1 = L.box({
+            center: [-37.7772, 175.2756],
+            width: 1000,
+            length: 500,
+            bearing: 45,
+            color: 'blue'
+        }).on('dblclick', e => toggle(e, box1))
+
+        let arc1 = L.arc({
+            center: [-37.7772, 175.2756],
+            radius: 1000,
+            color: 'red',
+            startBearing: 0,
+            endBearing: 90
+        }).on('dblclick', e => toggle(e, arc1))
+
+        let sector1 = L.sector({
+            center: [-37.7772, 175.2756],
+            innerRadius: 500,
+            outerRadius: 1000,
+            startBearing: 180,
+            endBearing: 270,
+            color: 'green'
+        }).on('dblclick', e => toggle(e, sector1))
+
+        map.addLayer(sector1)
+        map.addLayer(arc1)
+        map.addLayer(box1)
+	</script>
+</body>
+
+</html>
