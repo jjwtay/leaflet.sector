@@ -23,8 +23,14 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
 
 ## Also checkout
 
-[leaflet.box](https://github.com/jjwtay/leaflet.box) - Leaflet support for Box drawings (rotatable rectangle)
-[leaflet.arc](https://github.com/jjwtay/leaflet.arc) - Leaflet support for Arc drawings (Semi circles)
+
+[leaflet.arc](https://github.com/jjwtay/leaflet.arc) - Leaflet Arc drawing.
+
+[leaflet.draw-arc](https://github.com/jjwtay/leaflet.draw-arc) - Leaflet Draw support for leaflet.arc.
+
+[leaflet.box](https://github.com/jjwtay/leaflet.box) - Leaflet Box drawing.
+
+[leaflet.box-sector](https://github.com/jjwtay/leaflet.box-sector) - Leaflet Draw support for leaflet.box.
 
 
 ## License
