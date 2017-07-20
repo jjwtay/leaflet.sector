@@ -1,5 +1,5 @@
 # leaflet.sector
-Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdfergason/Leaflet.Ellipse).
+Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdfergason/Leaflet.Ellipse). Checkout the [Demo](https://jjwtay.github.io/leaflet.sector/)
 
 ## API
 
