@@ -5,7 +5,7 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
 
 *Factory method*
 
-    L.Sector({
+    L.sector({
               <LatLng> center,
               <Number> innerRadius,
               <Number> outerRadius,
