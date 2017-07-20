@@ -23,6 +23,7 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
 
 ## Also checkout
 
+[leaflet.draw-sector](https://github.com/jjwtay/leaflet.draw-sector) - Leaflet Draw support for leaflet.sector.
 
 [leaflet.arc](https://github.com/jjwtay/leaflet.arc) - Leaflet Arc drawing.
 
