@@ -31,7 +31,7 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
 
 [leaflet.box](https://github.com/jjwtay/leaflet.box) - Leaflet Box drawing.
 
-[leaflet.box-sector](https://github.com/jjwtay/leaflet.box-sector) - Leaflet Draw support for leaflet.box.
+[leaflet.draw-box](https://github.com/jjwtay/leaflet.draw-box) - Leaflet Draw support for leaflet.box.
 
 
 ## License
