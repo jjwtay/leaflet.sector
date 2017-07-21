@@ -65,7 +65,9 @@ L.Sector = L.Polygon.extend({
                 startBearing = startBearing - 360
             }
         }
-    
+
+        while (endBearing - startBearing > 360) startBearing +=360
+
         this._startBearing = startBearing
         return this.redraw()
     },
@@ -89,7 +91,7 @@ L.Sector = L.Polygon.extend({
         }
         
         while (endBearing - startBearing > 360) endBearing -= 360
-    
+     
         this._endBearing = endBearing
         return this.redraw()
     },
@@ -191,10 +193,13 @@ L.Sector = L.Polygon.extend({
             var Δλ = δ*Math.sin(θ)/q;
             var λ2 = λ1 + Δλ;
 
+            let lngFinal = ((λ2 * 180 / Math.PI) + 540) % 360 - 180
+
+            while (lngFinal > 360) lngFinal -= 360
             //return new LatLon(φ2.toDegrees(), (λ2.toDegrees()+540) % 360 - 180); // normalise to −180..+180°
             return {
                 lat: φ2 * 180 / Math.PI,
-                lng: ((λ2 * 180 / Math.PI) + 540) % 360 - 180
+                lng: lngFinal
             }
         }
         let bng = bearing * Math.PI / 180
