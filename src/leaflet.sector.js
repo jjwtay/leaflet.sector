@@ -12,6 +12,7 @@ L.Sector = L.Polygon.extend({
         startBearing = 0,
         endBearing = 90,
         numberOfPoints = 32,
+        rhumb = false,
         ...options
     }) {
         this.setOptions(options)
@@ -21,6 +22,7 @@ L.Sector = L.Polygon.extend({
             .setStartBearing(startBearing)
             .setEndBearing(endBearing)
             .setNumberOfPoints(numberOfPoints)
+            .setRhumb(rhumb)
 
         this._setLatLngs(this.getLatLngs())
     },
@@ -149,13 +151,52 @@ L.Sector = L.Polygon.extend({
 
     setStyle: L.Path.prototype.setStyle,
 
+    getRhumb: function () { return this._rhumb },
+
+    setRhumb: function (rhumb = 45) {
+        this._rhumb = rhumb
+        return this.redraw()
+    },
+
     computeDestinationPoint: function (
         start = {lat: 0, lng: 0},
         distance = 1,
         bearing = 0,
-        radius = 6378137
+        radius = 6378137,
+        rhumb = this.getRhumb()
     ) {
 
+        if (rhumb) {
+            let d = distance,
+                θ = bearing * Math.PI / 180,
+                φ = start.lat * Math.PI / 180,
+                λ = start.lng * Math.PI / 180,
+                R = radius
+            /*http://www.movable-type.co.uk/scripts/latlong.html*/
+
+            var δ = Number(distance) / radius; // angular distance in radians
+            var φ1 = start.lat * Math.PI / 180
+            var λ1 = start.lng * Math.PI / 180
+            var θ = bearing * Math.PI / 180
+
+            var Δφ = δ * Math.cos(θ);
+            var φ2 = φ1 + Δφ;
+
+            // check for some daft bugger going past the pole, normalise latitude if so
+            if (Math.abs(φ2) > Math.PI/2) φ2 = φ2>0 ? Math.PI-φ2 : -Math.PI-φ2;
+
+            var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
+            var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+
+            var Δλ = δ*Math.sin(θ)/q;
+            var λ2 = λ1 + Δλ;
+
+            //return new LatLon(φ2.toDegrees(), (λ2.toDegrees()+540) % 360 - 180); // normalise to −180..+180°
+            return {
+                lat: φ2 * 180 / Math.PI,
+                lng: ((λ2 * 180 / Math.PI) + 540) % 360 - 180
+            }
+        }
         let bng = bearing * Math.PI / 180
 
         var lat1 = start.lat * Math.PI / 180
@@ -185,8 +226,9 @@ L.sector = ({
     startBearing = 0,
     endBearing = 90,
     numberOfPoints = 32,
+    rhumb = false,
     ...options
 }) =>
-    new L.Sector({center, innerRadius, outerRadius, startBearing, numberOfPoints, endBearing, ...options})
+    new L.Sector({center, innerRadius, rhumb, outerRadius, startBearing, numberOfPoints, endBearing, ...options})
 
 

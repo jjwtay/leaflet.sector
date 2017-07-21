@@ -10,7 +10,8 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
               <Number> innerRadius,
               <Number> outerRadius,
               <Number> startBearing,
-              <Number> endBearing
+              <Number> endBearing,
+              <Boolean> rhumb,
               <...Leaflet Polyline Options>
     })
 
@@ -19,6 +20,7 @@ Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdferga
     * outerRadius - in meters (optional -200)
     * startBearing - bearing in degrees (optional - 0)
     * endBearing - bearing in degrees (optional - 90)
+    * rhumb - whether to use rhumb or greater circle (optional = false)
     * any leaflet polygon options 
 
 ## Also checkout

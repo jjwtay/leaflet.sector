@@ -56,9 +56,11 @@ L.Sector = L.Polygon.extend({
             endBearing = _ref$endBearing === undefined ? 90 : _ref$endBearing,
             _ref$numberOfPoints = _ref.numberOfPoints,
             numberOfPoints = _ref$numberOfPoints === undefined ? 32 : _ref$numberOfPoints,
-            options = objectWithoutProperties(_ref, ['center', 'innerRadius', 'outerRadius', 'startBearing', 'endBearing', 'numberOfPoints']);
+            _ref$rhumb = _ref.rhumb,
+            rhumb = _ref$rhumb === undefined ? false : _ref$rhumb,
+            options = objectWithoutProperties(_ref, ['center', 'innerRadius', 'outerRadius', 'startBearing', 'endBearing', 'numberOfPoints', 'rhumb']);
 
-        this.setOptions(options).setCenter(center).setInnerRadius(innerRadius).setOuterRadius(outerRadius).setStartBearing(startBearing).setEndBearing(endBearing).setNumberOfPoints(numberOfPoints);
+        this.setOptions(options).setCenter(center).setInnerRadius(innerRadius).setOuterRadius(outerRadius).setStartBearing(startBearing).setEndBearing(endBearing).setNumberOfPoints(numberOfPoints).setRhumb(rhumb);
 
         this._setLatLngs(this.getLatLngs());
     },
@@ -206,13 +208,56 @@ L.Sector = L.Polygon.extend({
 
     setStyle: L.Path.prototype.setStyle,
 
+    getRhumb: function getRhumb() {
+        return this._rhumb;
+    },
+
+    setRhumb: function setRhumb() {
+        var rhumb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 45;
+
+        this._rhumb = rhumb;
+        return this.redraw();
+    },
+
     computeDestinationPoint: function computeDestinationPoint() {
         var start = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { lat: 0, lng: 0 };
         var distance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
         var bearing = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
         var radius = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 6378137;
+        var rhumb = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : this.getRhumb();
 
 
+        if (rhumb) {
+            var d = distance,
+                _ = bearing * Math.PI / 180,
+                φ = start.lat * Math.PI / 180,
+                λ = start.lng * Math.PI / 180,
+                R = radius;
+            /*http://www.movable-type.co.uk/scripts/latlong.html*/
+
+            var δ = Number(distance) / radius; // angular distance in radians
+            var φ1 = start.lat * Math.PI / 180;
+            var λ1 = start.lng * Math.PI / 180;
+            var _ = bearing * Math.PI / 180;
+
+            var Δφ = δ * Math.cos(_);
+            var φ2 = φ1 + Δφ;
+
+            // check for some daft bugger going past the pole, normalise latitude if so
+            if (Math.abs(φ2) > Math.PI / 2) φ2 = φ2 > 0 ? Math.PI - φ2 : -Math.PI - φ2;
+
+            var Δψ = Math.log(Math.tan(φ2 / 2 + Math.PI / 4) / Math.tan(φ1 / 2 + Math.PI / 4));
+            var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+
+            var Δλ = δ * Math.sin(_) / q;
+            var λ2 = λ1 + Δλ;
+
+            //return new LatLon(φ2.toDegrees(), (λ2.toDegrees()+540) % 360 - 180); // normalise to −180..+180°
+            return {
+                lat: φ2 * 180 / Math.PI,
+                lng: (λ2 * 180 / Math.PI + 540) % 360 - 180
+            };
+        }
         var bng = bearing * Math.PI / 180;
 
         var lat1 = start.lat * Math.PI / 180;
@@ -245,6 +290,8 @@ L.sector = function (_ref2) {
         endBearing = _ref2$endBearing === undefined ? 90 : _ref2$endBearing,
         _ref2$numberOfPoints = _ref2.numberOfPoints,
         numberOfPoints = _ref2$numberOfPoints === undefined ? 32 : _ref2$numberOfPoints,
-        options = objectWithoutProperties(_ref2, ['center', 'innerRadius', 'outerRadius', 'startBearing', 'endBearing', 'numberOfPoints']);
-    return new L.Sector(_extends({ center: center, innerRadius: innerRadius, outerRadius: outerRadius, startBearing: startBearing, numberOfPoints: numberOfPoints, endBearing: endBearing }, options));
+        _ref2$rhumb = _ref2.rhumb,
+        rhumb = _ref2$rhumb === undefined ? false : _ref2$rhumb,
+        options = objectWithoutProperties(_ref2, ['center', 'innerRadius', 'outerRadius', 'startBearing', 'endBearing', 'numberOfPoints', 'rhumb']);
+    return new L.Sector(_extends({ center: center, innerRadius: innerRadius, rhumb: rhumb, outerRadius: outerRadius, startBearing: startBearing, numberOfPoints: numberOfPoints, endBearing: endBearing }, options));
 };
