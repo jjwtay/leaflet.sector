@@ -117,7 +117,7 @@ L.Sector = L.Polygon.extend({
         let deltaAngle = angle/ptCount
         //latlngs.push(this.getCenter())
 
-        for (var i = 0; i < ptCount; i++) {
+        for (let i = 0; i < ptCount; i++) {
             let useAngle = this.getStartBearing() + deltaAngle * i
             latlngs.push(this.computeDestinationPoint(
                 this.getCenter(),
@@ -130,7 +130,7 @@ L.Sector = L.Polygon.extend({
             this.getOuterRadius(),
             this.getEndBearing()
         ))
-        for (var i = 0; i < ptCount; i++) {
+        for (let i = 0; i < ptCount; i++) {
             let useAngle = this.getEndBearing() - deltaAngle * i
             latlngs.push(this.computeDestinationPoint(
                 this.getCenter(),
@@ -146,8 +146,8 @@ L.Sector = L.Polygon.extend({
         return latlngs
     },
 
-    setLatLngs: function(latLngs) {
-        this._setLatLngs(this.getLatLngs())
+    setLatLngs: function(latLngs = this.getLatLngs()) {
+        this._setLatLngs(latLngs)
         return this.redraw()
     },
 
@@ -169,29 +169,24 @@ L.Sector = L.Polygon.extend({
     ) {
 
         if (rhumb) {
-            let d = distance,
-                θ = bearing * Math.PI / 180,
-                φ = start.lat * Math.PI / 180,
-                λ = start.lng * Math.PI / 180,
-                R = radius
             /*http://www.movable-type.co.uk/scripts/latlong.html*/
 
-            var δ = Number(distance) / radius; // angular distance in radians
+            var δ = Number(distance) / radius// angular distance in radians
             var φ1 = start.lat * Math.PI / 180
             var λ1 = start.lng * Math.PI / 180
             var θ = bearing * Math.PI / 180
 
-            var Δφ = δ * Math.cos(θ);
-            var φ2 = φ1 + Δφ;
+            var Δφ = δ * Math.cos(θ)
+            var φ2 = φ1 + Δφ
 
             // check for some daft bugger going past the pole, normalise latitude if so
-            if (Math.abs(φ2) > Math.PI/2) φ2 = φ2>0 ? Math.PI-φ2 : -Math.PI-φ2;
+            if (Math.abs(φ2) > Math.PI/2) φ2 = φ2>0 ? Math.PI-φ2 : -Math.PI-φ2
 
-            var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
-            var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+            var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4))
+            var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1) // E-W course becomes ill-conditioned with 0/0
 
-            var Δλ = δ*Math.sin(θ)/q;
-            var λ2 = λ1 + Δλ;
+            var Δλ = δ*Math.sin(θ)/q
+            var λ2 = λ1 + Δλ
 
             let lngFinal = ((λ2 * 180 / Math.PI) + 540) % 360 - 180
 
@@ -211,7 +206,7 @@ L.Sector = L.Polygon.extend({
             Math.cos(lat1)*Math.sin(distance/radius)*Math.cos(bng))
 
         var lon2 = lon1 + Math.atan2(Math.sin(bng)*Math.sin(distance/radius)*Math.cos(lat1),
-                    Math.cos(distance/radius)-Math.sin(lat1)*Math.sin(lat2))
+            Math.cos(distance/radius)-Math.sin(lat1)*Math.sin(lat2))
                     
         lat2 = lat2 * 180 / Math.PI
         lon2 = lon2 * 180 / Math.PI

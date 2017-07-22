@@ -1,6 +1,24 @@
 # leaflet.sector
 Leaflet Sector support. Inspired by [leaflet.ellipse](https://github.com/jdfergason/Leaflet.Ellipse). Checkout the [Demo](https://jjwtay.github.io/leaflet.sector/)
 
+## How to
+
+*Traditional*
+
+    Include leaflet.sector.js in your html
+
+    <script src='/path/to/leaflet.sector'></script>
+
+*Webpack as non es6 module*
+
+    import './path/to/leaflet.sector'
+
+    * If using es6 with object spread you can opt to use the uncompiled src/leaflet.sector.js
+
+*ES6 module*
+
+    TODO
+
 ## API
 
 *Factory method*

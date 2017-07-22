@@ -194,8 +194,8 @@ L.Sector = L.Polygon.extend({
             latlngs.push(this.computeDestinationPoint(this.getCenter(), this.getOuterRadius(), useAngle));
         }
         latlngs.push(this.computeDestinationPoint(this.getCenter(), this.getOuterRadius(), this.getEndBearing()));
-        for (var i = 0; i < ptCount; i++) {
-            var _useAngle = this.getEndBearing() - deltaAngle * i;
+        for (var _i = 0; _i < ptCount; _i++) {
+            var _useAngle = this.getEndBearing() - deltaAngle * _i;
             latlngs.push(this.computeDestinationPoint(this.getCenter(), this.getInnerRadius(), _useAngle));
         }
         latlngs.push(this.computeDestinationPoint(this.getCenter(), this.getInnerRadius(), this.getStartBearing()));
@@ -203,8 +203,10 @@ L.Sector = L.Polygon.extend({
     },
 
 
-    setLatLngs: function setLatLngs(latLngs) {
-        this._setLatLngs(this.getLatLngs());
+    setLatLngs: function setLatLngs() {
+        var latLngs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getLatLngs();
+
+        this._setLatLngs(latLngs);
         return this.redraw();
     },
 
@@ -230,19 +232,14 @@ L.Sector = L.Polygon.extend({
 
 
         if (rhumb) {
-            var d = distance,
-                _ = bearing * Math.PI / 180,
-                φ = start.lat * Math.PI / 180,
-                λ = start.lng * Math.PI / 180,
-                R = radius;
             /*http://www.movable-type.co.uk/scripts/latlong.html*/
 
             var δ = Number(distance) / radius; // angular distance in radians
             var φ1 = start.lat * Math.PI / 180;
             var λ1 = start.lng * Math.PI / 180;
-            var _ = bearing * Math.PI / 180;
+            var θ = bearing * Math.PI / 180;
 
-            var Δφ = δ * Math.cos(_);
+            var Δφ = δ * Math.cos(θ);
             var φ2 = φ1 + Δφ;
 
             // check for some daft bugger going past the pole, normalise latitude if so
@@ -251,7 +248,7 @@ L.Sector = L.Polygon.extend({
             var Δψ = Math.log(Math.tan(φ2 / 2 + Math.PI / 4) / Math.tan(φ1 / 2 + Math.PI / 4));
             var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
 
-            var Δλ = δ * Math.sin(_) / q;
+            var Δλ = δ * Math.sin(θ) / q;
             var λ2 = λ1 + Δλ;
 
             var lngFinal = (λ2 * 180 / Math.PI + 540) % 360 - 180;
