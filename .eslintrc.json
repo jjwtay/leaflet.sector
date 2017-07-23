@@ -12,6 +12,15 @@
         }
     },
     "rules": {
+        "arrow-parens": [
+            "error",
+            "always"
+        ],
+        "arrow-spacing": "error",
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
         "indent": [
             "error",
             4
@@ -20,6 +29,15 @@
             "error",
             "unix"
         ],
+        "no-trailing-spaces": [
+            "error"
+        ],
+        "no-multi-spaces": "error",
+        "no-use-before-define": "error",
+        "no-var": "error",
+        "no-whitespace-before-property": "error",
+        "object-shorthand": "error",
+        "prefer-const": "error",
         "quotes": [
             "error",
             "single"
@@ -27,9 +45,21 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+
+        "space-before-blocks": "error",
+        "space-before-function-paren": [
+            "error",
+            "always"
+        ],
+        "vars-on-top": "error"
     },
     "globals": {
         "L": true
-    }
+    },
+    "overrides": [
+        {
+            "files": "./src/*.js"
+        }
+    ]
 }

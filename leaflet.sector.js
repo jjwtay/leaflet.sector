@@ -64,42 +64,34 @@ L.Sector = L.Polygon.extend({
 
         this._setLatLngs(this.getLatLngs());
     },
-
     getCenter: function getCenter() {
         return this._center;
     },
-
     setCenter: function setCenter(center) {
         this._center = L.latLng(center);
         return this.redraw();
     },
-
     getInnerRadius: function getInnerRadius() {
         return this._innerRadius;
     },
-
     setInnerRadius: function setInnerRadius() {
         var radius = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
 
         this._innerRadius = Math.abs(radius);
         return this.redraw();
     },
-
     getOuterRadius: function getOuterRadius() {
         return this._outerRadius;
     },
-
     setOuterRadius: function setOuterRadius() {
         var radius = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 200;
 
         this._outerRadius = Math.abs(radius);
         return this.redraw();
     },
-
     getStartBearing: function getStartBearing() {
         return this._startBearing;
     },
-
     setStartBearing: function setStartBearing() {
         var startBearing = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -127,11 +119,9 @@ L.Sector = L.Polygon.extend({
         }this._startBearing = startBearing;
         return this.redraw();
     },
-
     getEndBearing: function getEndBearing() {
         return this._endBearing;
     },
-
     setEndBearing: function setEndBearing() {
         var endBearing = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 90;
 
@@ -159,29 +149,24 @@ L.Sector = L.Polygon.extend({
         }this._endBearing = endBearing;
         return this.redraw();
     },
-
     getNumberOfPoints: function getNumberOfPoints() {
         return this._numberOfPoints;
     },
-
     setNumberOfPoints: function setNumberOfPoints() {
         var numberOfPoints = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 32;
 
         this._numberOfPoints = Math.max(10, numberOfPoints);
         return this.redraw();
     },
-
     getOptions: function getOptions() {
         return this.options;
     },
-
     setOptions: function setOptions() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
         L.setOptions(this, options);
         return this.redraw();
     },
-
     getLatLngs: function getLatLngs() {
         var angle = this.getEndBearing() - this.getStartBearing();
         var ptCount = angle * this.getNumberOfPoints() / 360;
@@ -201,8 +186,6 @@ L.Sector = L.Polygon.extend({
         latlngs.push(this.computeDestinationPoint(this.getCenter(), this.getInnerRadius(), this.getStartBearing()));
         return latlngs;
     },
-
-
     setLatLngs: function setLatLngs() {
         var latLngs = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getLatLngs();
 
@@ -210,19 +193,18 @@ L.Sector = L.Polygon.extend({
         return this.redraw();
     },
 
+
     setStyle: L.Path.prototype.setStyle,
 
     getRhumb: function getRhumb() {
         return this._rhumb;
     },
-
     setRhumb: function setRhumb() {
         var rhumb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 45;
 
         this._rhumb = rhumb;
         return this.redraw();
     },
-
     computeDestinationPoint: function computeDestinationPoint() {
         var start = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { lat: 0, lng: 0 };
         var distance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
